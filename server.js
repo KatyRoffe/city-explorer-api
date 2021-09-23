@@ -1,48 +1,44 @@
 'use strict';
 // console.log("hello world");
 
-
-
-const express = require('exress');
+const express = require('express');
 const cors = require("cors");
+
 require("dotenv").config();
 
+const PORT = process.env.PORT || 3001;
 
 const app = express();
-app.use(cors());
-const PORT = process.env.PORT || 3000
 
-const weather = require("./data/weather.json");
-const { response } = require('express');
-const
+app.use(cors());
 
 
 class Forecast {
-  constructor(date, description, lat, lon) {
-    this.date = date,
-    this.description = description,
-    this.lat = lat;
-    this.lon = lon;
+  constructor(date, description) {
+    this.date = date;
+    this.description = description;
   }
 }
 
 app.get('/', (request, response) => {
-  response.send('Halp!')
+  response.send('Screaming into the void')
+});
+// huzzah, this returns on localhost:3001
+// not sure if the weather stuff works yet
+
+
+app.get("/weather", (request, response) => {
+
+  const cityName = request.query.cityName;
+  const weatherForecast = weather.find(city => city.city_name === cityName);
+ 
+  if(weatherForecast) {
+    const weatherArray = weatherForecast.data.map(result => new Forecast(result));
+    response.send(weatherArray);
+  } else {
+    response.status(500).send('Invalid Reponse. Please enter new city.')
+  }
 });
 
+app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 
-app.get("/weather", (req, response) => {
-
-  let cityName = request.query.cityName;
-  let weatherData = weather.find(item => item.city_name === cityName);
-  }
-    try {
-      const weatherArray = weatherData.data.map((x) => {
-        return new Forecast(x.valid_date, x.weather.description, weatherData.lat, weatherData.lon);
-      });
-      response.send(weatherArray);
-
-    } catch(error) {
-      console.log(error);
-    }
-);
