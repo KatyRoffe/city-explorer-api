@@ -1,58 +1,64 @@
-'use strict';
-// console.log("hello world");
+'use strict'
 
+// server setup
+require('dotenv').config();
 const express = require('express');
-const cors = require("cors");
+const cors = require('cors'); 
+const axios = require('axios');
 
-require("dotenv").config();
-
-const PORT = process.env.PORT || 3001;
-
+const PORT = process.env.PORT || 3001; 
 const app = express();
-
 app.use(cors());
 
 
-class Forecast {
-  constructor(date, description) {
-    this.date = date;
-    this.description = description;
-  }
-}
-
 app.get('/', (request, response) => {
-  response.send('Screaming into the void')
-});
-// huzzah, this returns on localhost:3001
-// not sure if the weather stuff works yet
-
-
-app.get('/weather', async (request, response) => {
-
-  const cityWeather = request.query.cityName;
-  const weatherForecast = weather.find(city => city.city_name === cityWeather);
-  const lat = request.query.lat;
-  const lon = request.query.lon;
-
-  const weatherData = await axios.get(`https://api.weatherbit.io/v2.0/forecast/daily/?city=${cityWeather}&key=${process.env.WEATHER_API_KEY}`);
-  
- 
-  if(weatherForecast) {
-    const weatherData = weatherForecast.data.map(result => new Forecast(result));
-    response.send(weatherData);
-  } else {
-    response.status(500).send('Invalid Reponse. Please enter new city.');
-  }
+    response.send('Screaming into the void')
 });
 
-app.get('/movies', async (request, resonse)) => {
-  const cityMovies = request.query.cityMovies;
-  const movieData = await axios.get(`https://api.themoviedb.org/3/search/movie?query=${cityName}&api_key=${process.env.MOVIES_API_KEY}&language=en-US&page=1&include_adult=false`);
 
+function Forecast(day) {
+    this.day = day.valid_date;
+    this.description = day.weather.description;
 }
 
+function Movies(movie) {
+  this.image = movie.poster_path;
+  this.title = movie.title;
+  this.overview = movie.overview;
+}
 
+app.get('/weather',  async (request, response) => {
+    const lat = request.query.lat;
+    const lon = request.query.lon;
 
+    const weatherAPIUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&land=en&lat=${lat}&lon=${lon}&days=5`
+    console.log(weatherAPI);
+    const weatherResponse = await axios.get(weatherAPIUrl); 
+    
+    try {
+        const weatherArray = weatherResponse.data.data.map(day => {
+            return new Forecast(day);
+        });
+        response.send(weatherArray)
+    } catch (error) {
+        response.status(400).send('Error. Please try again.');
+    }
+});
+
+app.get('/movies',  async (request, response) => {
+  const citySearch = request.query.searchQuery
+  const movieAPIUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${citySearch}&language=en-US&page=1&include_adult=false`
+  
+  const movieResponse = await axios.get(movieAPIUrl); 
+
+  try {
+      const movieArray = movieResponse.data.results.map(movie => {
+          return new Movies(movie);
+      });
+      response.send(movieArray)
+  } catch (error) {
+      response.status(400).send('Error. Please try again.');
+  }
+});
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
-
