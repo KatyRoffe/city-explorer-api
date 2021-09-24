@@ -1,5 +1,6 @@
 'use strict'
 
+// server setup
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors'); 
@@ -14,9 +15,16 @@ app.get('/', (request, response) => {
     response.send('Screaming into the void')
 });
 
+
 function Forecast(day) {
     this.day = day.valid_date;
     this.description = day.weather.description;
+}
+
+function Movies(movie) {
+  this.image = movie.poster_path;
+  this.title = movie.title;
+  this.overview = movie.overview;
 }
 
 app.get('/weather',  async (request, response) => {
@@ -33,8 +41,24 @@ app.get('/weather',  async (request, response) => {
         });
         response.send(weatherArray)
     } catch (error) {
-        response.status(400).send('Please try again.');
+        response.status(400).send('Error. Please try again.');
     }
+});
+
+app.get('/movies',  async (request, response) => {
+  const citySearch = request.query.searchQuery
+  const movieAPIUrl = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${citySearch}&language=en-US&page=1&include_adult=false`
+  
+  const movieResponse = await axios.get(movieAPIUrl); 
+
+  try {
+      const movieArray = movieResponse.data.results.map(movie => {
+          return new Movies(movie);
+      });
+      response.send(movieArray)
+  } catch (error) {
+      response.status(400).send('Error. Please try again.');
+  }
 });
 
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
