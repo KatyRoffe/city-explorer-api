@@ -32,7 +32,7 @@ app.get('/weather',  async (request, response) => {
     const lon = request.query.lon;
 
     const weatherAPIUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&land=en&lat=${lat}&lon=${lon}&days=5`
-    console.log(weatherAPI);
+    console.log(weatherAPIUrl);
     const weatherResponse = await axios.get(weatherAPIUrl); 
     
     try {
