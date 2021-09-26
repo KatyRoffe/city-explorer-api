@@ -10,19 +10,19 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 app.use(cors());
 
-
+// route
 app.get('/', (request, response) => {
     response.send('Screaming into the void')
 });
 
-
+// function
 function Forecast(day) {
     this.day = day.valid_date;
     this.description = day.weather.description;
 }
 
 function Movies(movie) {
-  this.image = movie.poster_path;
+  this.imageURL = 'https://image.tmdb.org/t/p/w500' + movie.poster_path;
   this.title = movie.title;
   this.overview = movie.overview;
 }
@@ -32,7 +32,7 @@ app.get('/weather',  async (request, response) => {
     const lon = request.query.lon;
 
     const weatherAPIUrl = `https://api.weatherbit.io/v2.0/forecast/daily?key=${process.env.WEATHER_API_KEY}&land=en&lat=${lat}&lon=${lon}&days=5`
-    console.log(weatherAPIUrl);
+    // console.log(weatherAPIUrl);
     const weatherResponse = await axios.get(weatherAPIUrl); 
     
     try {
