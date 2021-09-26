@@ -1,3 +1,5 @@
+//does not like 'use strict'
+
 const axios = require('axios');
 
 function Movies(movie) {
@@ -23,3 +25,4 @@ getMovies = async (request, response) => {
 };
 
 module.exports = {getMovies: getMovies}
+

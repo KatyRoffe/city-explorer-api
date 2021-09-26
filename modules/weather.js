@@ -23,3 +23,5 @@ getWeather = async (req, res) => {
 };
 
 module.exports = {getWeather: getWeather}
+
+//what what what? 
