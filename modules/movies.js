@@ -26,3 +26,25 @@ getMovies = async (request, response) => {
 
 module.exports = {getMovies: getMovies}
 
+////working copy of an idea, not entirely sure if it would work, need to figure out how to integrate
+
+// if (cache[mKey] && (Date.now() - cache[mKey].timestamp < ????? )){ //gotta figure out timestamps
+//   console.log('movie Cache hit');
+// } else {
+//   console.log('movie Cache miss');
+//   try{
+//     cache[mKey] = {};
+//     cache[mKey].timestamp = Date.now();
+//     cache[mKey].data = await axios.get(movieAPI_URL);
+//   } catch (error) {
+//     cache[mKey] = undefined;
+//   }
+// }
+
+// try{
+//   let movieResponse = await axios.get(movieAPI_URL); // do I need to do another axios here?
+//   const movieArray = movieResponse.data.results.map(movie => new Movie(movie));
+//   response.status(200).send(movieArray);
+// } catch (error) {
+//   response.status(400).send('Error. Please Try Again');
+//}

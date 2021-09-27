@@ -1,3 +1,5 @@
+//does not like 'use strict'
+
 const axios = require('axios');
 
 function Forecast(day) {
@@ -24,4 +26,27 @@ getWeather = async (req, res) => {
 
 module.exports = {getWeather: getWeather}
 
-//what what what? 
+
+////working copy of an idea, not entirely sure if it would work, need to figure out how to integrate
+
+// if (cache[wKey] && (Date.now() - cache[wKey].timestamp < ????? )){ // figure out timestamps
+//   console.log('weather Cache hit');
+// } else {
+//   console.log('weather Cache miss');
+//   try{
+//     cache[wKey] = {};
+//     cache[wKey].timestamp = Date.now();
+//     cache[wKey].data = await axios.get(weatherAPI_URL); // do I need to do another axios?
+//   } catch (error) {
+//     cache[wKey] = undefined;
+//   }
+// }
+
+// try{
+//   let weatherResponse = cache[wKey].data;
+//   const weatherArr = weatherResponse.data.data.map(day => new Forecast(day));
+//   response.status(200).send(weatherArr);
+// } catch (error) {
+//   res.status(400).send('Error. Please try again.');
+// }
+
